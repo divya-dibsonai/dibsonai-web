@@ -29,10 +29,37 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── Mobile Overrides ─────────────────────────────────────────── */
+@media (max-width: 680px) {
+
+  /* Contact form: 2-col grid → single column */
+  .contact-form-grid {
+    grid-template-columns: 1fr !important;
   }
-  to {
-    transform: rotate(360deg);
+
+  /* Student detail page: 2-col grid → single column */
+  .student-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Tutor dashboard stats row → wrap */
+  .tutor-stats-row {
+    flex-wrap: wrap !important;
+  }
+
+  /* General section padding reduction */
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Footer padding */
+  footer {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 }

@@ -89,6 +89,7 @@ function Btn({ children, onClick, color=T.orange, outline=false, full=false, sma
 /* ════════════ NAV ════════════ */
 function Nav({ screen, setScreen, session, onLogout }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const isHome = screen === "home";
 
   useEffect(() => {
@@ -97,105 +98,125 @@ function Nav({ screen, setScreen, session, onLogout }) {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); }, [screen]);
+
   return (
     <nav style={{
       position:"fixed", top:0, left:0, right:0, zIndex:1000,
-      //background: scrolled || !isHome ? "rgba(255,251,240,0.97)" : "transparent",
       backdropFilter: scrolled || !isHome ? "blur(14px)" : "none",
       borderBottom: scrolled || !isHome ? `3px solid ${T.yellow}` : "none",
-      padding:"14px 40px", display:"flex", alignItems:"center", justifyContent:"space-between",
       transition:"all .3s",
     }}>
-{/* Logo */}
-{/* Logo & Two-Line Brand Name */}
-<div onClick={() => { onLogout(); setScreen("home"); }} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
-  
-  {/* Your Logo Image */}
-  <img src={logo} alt="DibsOnAI Logo" style={{ height: 55, width: "auto" }} /> 
+      {/* ── Main bar ── */}
+      <div style={{ padding:"14px 24px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
 
-  {/* Text Container: Stacks Brand and Tagline vertically */}
-  <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    
-    {/* Line 1: Main Brand Name */}
-    <span style={{ 
-      fontFamily: "'Fredoka One', cursive", 
-      fontSize: 25, 
-      color: "#FFFFFF", 
-      lineHeight: "1.5" 
-    }}>
-      Dibs<span style={{ color: "#9D00FF" }}>On</span>AI
-    </span>
+        {/* Logo */}
+        <div onClick={() => { onLogout(); setScreen("home"); }} style={{ cursor:"pointer", display:"flex", alignItems:"center", gap:12 }}>
+          <img src={logo} alt="DibsOnAI Logo" style={{ height:50, width:"auto" }} />
+          <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
+            <span style={{ fontFamily:"'Fredoka One',cursive", fontSize:24, color:"#FFFFFF", lineHeight:"1.4" }}>
+              Dibs<span style={{ color:"#9D00FF" }}>On</span>AI
+            </span>
+            <span style={{ fontSize:11, fontWeight:800, color:"#FF1493", letterSpacing:"0.8px", textTransform:"uppercase" }}>
+              CODE CREATE CONQUER
+            </span>
+          </div>
+        </div>
 
-    {/* Line 2: Tagline */}
-    <span style={{ 
-      fontSize: 15, 
-      fontWeight: 800, 
-      color: "#FF1493", // Hot Pink/Fuchsia
-      letterSpacing: "0.8px",
-      marginTop: 1,
-      textTransform: "uppercase"
-    }}>
-      CODE CREATE CONQUER
-    </span>
-    
-  </div>
-</div>
+        {/* Desktop: center links + right buttons */}
+        <div style={{ display:"flex", alignItems:"center", gap:16 }}>
 
-{/* Center links — only on homepage */}
-{/* Center links — only on homepage */}
-{isHome && (
-  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-    {["courses", "about", "contact"].map(s => (
-      <a 
-        key={s} 
-        href={`#${s}`} 
-        style={{ 
-          padding: "8px 20px", 
-          borderRadius: 99, 
-          fontSize: 15, 
-          fontWeight: 700, 
-          color: "#FFFFFF", 
-          background: "rgba(255, 255, 255, 0.1)", // Subtle background so they are visible
-          textDecoration: "none", 
-          textTransform: "capitalize", 
-          transition: "all 0.3s ease", // Smooth transition like the other buttons
-          border: "1px solid rgba(255, 255, 255, 0.2)"
-        }}
-        onMouseEnter={e => {
-          e.target.style.background = T.yellow; // Changes to Yellow on hover
-          e.target.style.color = T.navy;       // Text changes to Navy for readability
-          e.target.style.transform = "scale(1.05)"; // Slight "pop" effect
-        }}
-        onMouseLeave={e => {
-          e.target.style.background = "rgba(255, 255, 255, 0.1)"; // Back to subtle white
-          e.target.style.color = "#FFFFFF";
-          e.target.style.transform = "scale(1)";
-        }}
-      >
-        {s}
-      </a>
-    ))}
-  </div>
-)}
+          {/* Center nav links — desktop only */}
+          {isHome && (
+            <div className="nav-links-desktop" style={{ display:"flex", gap:10, alignItems:"center" }}>
+              {["courses","about","contact"].map(s => (
+                <a key={s} href={`#${s}`}
+                  style={{ padding:"8px 18px", borderRadius:99, fontSize:14, fontWeight:700, color:"#FFFFFF",
+                    background:"rgba(255,255,255,0.1)", textDecoration:"none", textTransform:"capitalize",
+                    transition:"all 0.3s ease", border:"1px solid rgba(255,255,255,0.2)" }}
+                  onMouseEnter={e => { e.target.style.background=T.yellow; e.target.style.color=T.navy; }}
+                  onMouseLeave={e => { e.target.style.background="rgba(255,255,255,0.1)"; e.target.style.color="#FFFFFF"; }}
+                >{s}</a>
+              ))}
+            </div>
+          )}
 
+          {/* Right portal buttons — desktop only */}
+          <div className="nav-portal-desktop">
+            {session ? (
+              <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                <span style={{ fontWeight:700, fontSize:13, color:"#FFD93D" }}>
+                  {session.role === "tutor" ? "🧑‍🏫 Tutor" : `🧒 ${session.student.name}`}
+                </span>
+                <Btn onClick={onLogout} color={T.navy} small>Sign Out</Btn>
+              </div>
+            ) : (
+              <div style={{ display:"flex", gap:8 }}>
+                <Btn onClick={() => setScreen("student-login")} color={T.teal} outline small>Student Login 🧒</Btn>
+                <Btn onClick={() => setScreen("tutor-login")} color={"#9D00FF"} small>Tutor Login 🧑‍🏫</Btn>
+              </div>
+            )}
+          </div>
 
+          {/* Hamburger — mobile only */}
+          <button
+            className="nav-hamburger"
+            onClick={() => setMenuOpen(o => !o)}
+            style={{ display:"none", background:"none", border:"none", cursor:"pointer", padding:6, flexDirection:"column", gap:5, alignItems:"center", justifyContent:"center" }}
+            aria-label="Toggle menu"
+          >
+            <span style={{ display:"block", width:24, height:3, borderRadius:3, background:"#FFFFFF", transition:"all .3s", transform: menuOpen ? "rotate(45deg) translate(5px,6px)" : "none" }}/>
+            <span style={{ display:"block", width:24, height:3, borderRadius:3, background:"#FFFFFF", transition:"all .3s", opacity: menuOpen ? 0 : 1 }}/>
+            <span style={{ display:"block", width:24, height:3, borderRadius:3, background:"#FFFFFF", transition:"all .3s", transform: menuOpen ? "rotate(-45deg) translate(5px,-6px)" : "none" }}/>
+          </button>
+        </div>
+      </div>
 
-      {/* Right — portal buttons OR logout */}
-      <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+      {/* ── Mobile dropdown menu ── */}
+      <div className="nav-mobile-menu" style={{
+        display: menuOpen ? "flex" : "none",
+        flexDirection:"column", gap:10,
+        padding:"16px 24px 20px",
+        borderTop:`2px solid rgba(255,215,61,0.3)`,
+        background:"rgba(26,26,94,0.98)",
+      }}>
+        {/* Nav links */}
+        {isHome && ["courses","about","contact"].map(s => (
+          <a key={s} href={`#${s}`} onClick={() => setMenuOpen(false)}
+            style={{ padding:"12px 18px", borderRadius:14, fontSize:15, fontWeight:700,
+              color:"#FFFFFF", background:"rgba(255,255,255,0.08)", textDecoration:"none",
+              textTransform:"capitalize", textAlign:"center", border:"1px solid rgba(255,255,255,0.15)" }}
+          >{s}</a>
+        ))}
+
+        {/* Auth buttons */}
         {session ? (
           <>
-            <span style={{ fontWeight:700, fontSize:13, color:T.navy }}>
-              {session.role==="tutor" ? "🧑‍🏫 Tutor" : `🧒 ${session.student.name}`}
-            </span>
-            <Btn onClick={onLogout} color={T.navy} small>Sign Out</Btn>
+            <div style={{ textAlign:"center", fontWeight:700, fontSize:14, color:"#FFD93D", padding:"8px 0" }}>
+              {session.role === "tutor" ? "🧑‍🏫 Tutor" : `🧒 ${session.student.name}`}
+            </div>
+            <Btn onClick={() => { onLogout(); setMenuOpen(false); }} color={T.navy} full>Sign Out</Btn>
           </>
         ) : (
           <>
-            <Btn onClick={() => setScreen("student-login")} color={T.teal} outline small>Student Login 🧒</Btn>
-            <Btn onClick={() => setScreen("tutor-login")}   color={"#9D00FF"} small>Tutor Login 🧑‍🏫</Btn>
+            <Btn onClick={() => { setScreen("student-login"); setMenuOpen(false); }} color={T.teal} outline full>Student Login 🧒</Btn>
+            <Btn onClick={() => { setScreen("tutor-login"); setMenuOpen(false); }} color={"#9D00FF"} full>Tutor Login 🧑‍🏫</Btn>
           </>
         )}
       </div>
+
+      {/* ── Responsive styles injected once ── */}
+      <style>{`
+        @media (max-width: 680px) {
+          .nav-links-desktop { display: none !important; }
+          .nav-portal-desktop { display: none !important; }
+          .nav-hamburger { display: flex !important; }
+        }
+        @media (min-width: 681px) {
+          .nav-mobile-menu { display: none !important; }
+        }
+      `}</style>
     </nav>
   );
 }
@@ -406,7 +427,7 @@ function ContactForm() {
   
   return (
     <div style={{ background: T.white, borderRadius: 26, padding: 38, boxShadow: "0 8px 36px rgba(0,0,0,0.07)" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+      <div className="contact-form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
         {[["Your Name", "name", "👤", "text"], ["Email", "email", "📧", "email"], ["Child's Name", "child", "🧒", "text"], ["Child's Age", "age", "🎂", "text"]].map(([ph, k, icon, type]) => (
           <div key={k} style={{ position: "relative" }}>
             <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", fontSize: 15 }}>{icon}</span>
@@ -550,7 +571,7 @@ function StudentDash({ student:s, onLogout }) {
                 ))}
               </div>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
+            <div className="student-detail-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
               <div style={{ background:T.white, borderRadius:20, padding:20, boxShadow:"0 2px 14px rgba(0,0,0,0.05)" }}>
                 <h3 style={{ fontFamily:"'Fredoka One',cursive", fontSize:17, color:T.navy, marginBottom:12 }}>📅 Next Session</h3>
                 <div style={{ background:`${s.color}12`, borderRadius:14, padding:"14px 16px", borderLeft:`4px solid ${s.color}` }}>
@@ -800,7 +821,7 @@ function TutorDash({ onLogout }) {
     <h1 style={{ fontFamily:"'Fredoka One',cursive", fontSize:28, color:T.navy, marginBottom:4 }}>Schedule 📅</h1>
     <p style={{ color:"#9CA3AF", marginBottom:22 }}>March 2026 — click a day</p>
     <GoogleCalendarPanel />
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
+            <div className="student-detail-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
               <div style={{ background:T.white, borderRadius:22, padding:22, boxShadow:"0 2px 14px rgba(0,0,0,0.05)" }}>
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:3, marginBottom:10 }}>
                   {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d=><div key={d} style={{ textAlign:"center", fontSize:11, fontWeight:700, color:"#9CA3AF", padding:"3px 0" }}>{d}</div>)}
@@ -890,9 +911,7 @@ function TutorStudentDetail({ s, onBack }) {
           </div>
         ))}
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
-        <div style={{ background:T.white, borderRadius:20, padding:22, boxShadow:"0 2px 14px rgba(0,0,0,0.05)" }}>
-          <h3 style={{ fontFamily:"'Fredoka One',cursive",fontSize:17,color:T.navy,marginBottom:14 }}>🗺️ Learning Path</h3>
+      <div className="student-detail-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
           {s.milestones.map((m,i)=>{
             const isDone=i<done, isCur=i===done;
             return (
