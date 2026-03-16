@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/dibsonai-web/static/css/main.e6c13ad2.css",
-    "main.js": "/dibsonai-web/static/js/main.0bc86c37.js",
+    "main.js": "/dibsonai-web/static/js/main.a6e9ab1e.js",
     "static/js/453.c664610e.chunk.js": "/dibsonai-web/static/js/453.c664610e.chunk.js",
     "static/media/profile.png": "/dibsonai-web/static/media/profile.5f4eb88d2cbd6bd6dd12.png",
     "static/media/logo.jpg": "/dibsonai-web/static/media/logo.b9e51ebba0545204818f.jpg",
     "index.html": "/dibsonai-web/index.html",
     "main.e6c13ad2.css.map": "/dibsonai-web/static/css/main.e6c13ad2.css.map",
-    "main.0bc86c37.js.map": "/dibsonai-web/static/js/main.0bc86c37.js.map",
+    "main.a6e9ab1e.js.map": "/dibsonai-web/static/js/main.a6e9ab1e.js.map",
     "453.c664610e.chunk.js.map": "/dibsonai-web/static/js/453.c664610e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.0bc86c37.js"
+    "static/js/main.a6e9ab1e.js"
   ]
 }
