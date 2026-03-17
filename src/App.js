@@ -221,12 +221,243 @@ function Nav({ screen, setScreen, session, onLogout }) {
   );
 }
 
+/* ════════════ MODAL ════════════ */
+function Modal({ onClose, children }) {
+  return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:2000, background:"rgba(0,0,0,0.55)", display:"flex", alignItems:"center", justifyContent:"center", padding:20, backdropFilter:"blur(4px)" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:T.white, borderRadius:28, padding:36, maxWidth:560, width:"100%", maxHeight:"85vh", overflowY:"auto", position:"relative", animation:"pop .3s ease", boxShadow:"0 24px 80px rgba(0,0,0,0.2)" }}>
+        <button onClick={onClose} style={{ position:"absolute", top:16, right:16, background:"#F3F4F6", border:"none", borderRadius:"50%", width:34, height:34, fontSize:18, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", color:"#6B7280" }}>✕</button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ COURSES SECTION ════════════ */
+function CoursesSection() {
+  const [activeModal, setActiveModal] = useState(null);
+
+  const COURSES = [
+    {
+      icon:"🧱", title:"Logic Legends", desc:"Build games, animations & stories. Focuses on the brain of coding.", color:T.teal, age:"Age 6+",
+      modules:["Coding Fundamentals","App Development","Scientific Explorers","Codimath","Game Development","3D Modelling","Design Thinking","HTML / CSS","Microbit","Intro to Python","Java","C++","Edublocks"]
+    },
+    {
+      icon:"🐍", title:"Code Commanders", desc:"Master the language of the future! Build gravity-defying games and interactive stories with Python.", color:T.yellow, age:"Age 8+",
+      modules:["Coding Fundamentals","AI / ML","App Development","Electronics","HTML / CSS","Intro to Python","C++","Java","Python Advanced","Javascript","Premier OOP C++ & Java","Graphic Design"]
+    },
+    {
+      icon:"🤖", title:"AI Adventures", desc:"Train your own AI model, talk to chatbots, and explore machine learning!", color:T.orange, age:"Age 8+",
+      modules:["Premier Intro to Python","Premier Python Advanced","Intro to AI / ML","Data Visualisation","Premier Machine Learning","Python Flask","Premier Computer Vision","Advanced DBMS"]
+    },
+    {
+      icon:"🌐", title:"Web Magic", desc:"Create your own website with HTML, CSS and JavaScript from scratch.", color:T.green, age:"Age 10+",
+      modules:["Coding Fundamentals","App Development","HTML / CSS","Java","Javascript","Graphic Design","Premier Flask"]
+    },
+    {
+      icon:"🧠", title:"Prompt Engineering", desc:"Learn to talk to AI like a pro — craft prompts, build AI tools, go viral!", color:T.purple, age:"Age 12+",
+      modules:["Intro to ChatGPT & GenAI","Skill Building","Python and AI","Education & L&D with GenAI","Coding & Design Thinking","Content Creation","AI Tools Exploration","Deep Dive into GenAI","Building Products with GenAI"]
+    },
+    {
+      icon:"🎮", title:"Gamifiers", desc:"Dive into the world of Roblox and build your own games!", color:T.pink, age:"Age 12+",
+      modules:["Roblox Fundamentals","Advanced Roblox"]
+    },
+  ];
+
+  const active = COURSES.find(c => c.title === activeModal);
+
+  return (
+    <section id="courses" style={{ background:"#FF1493", padding:"100px 40px" }}>
+      <div style={{ maxWidth:1100, margin:"0 auto" }}>
+        <div style={{ textAlign:"center", marginBottom:56 }}>
+          <div style={{ display:"inline-block", background:T.yellow, color:T.navy, fontFamily:"'Fredoka One',cursive", padding:"6px 20px", borderRadius:99, fontSize:14, marginBottom:14 }}>What We Teach</div>
+          <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(30px,5vw,50px)", color:T.white }}>Courses Kids <span style={{ color:T.yellow }}>Love</span> 🎉</h2>
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:22 }}>
+          {COURSES.map((c,i) => (
+            <div key={i}
+              onClick={() => setActiveModal(c.title)}
+              style={{ background:T.white, borderRadius:24, padding:26, boxShadow:"0 4px 22px rgba(0,0,0,0.06)", borderBottom:`5px solid ${c.color}`, transition:"transform .2s, box-shadow .2s", cursor:"pointer" }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-8px)"; e.currentTarget.style.boxShadow=`0 12px 32px ${c.color}33`; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 22px rgba(0,0,0,0.06)"; }}
+            >
+              <div style={{ fontSize:46, marginBottom:12, display:"inline-block", animation:`float 4s ease-in-out ${i*.5}s infinite` }}>{c.icon}</div>
+              <div style={{ background:`${c.color}18`, color:c.color, fontSize:11, fontWeight:800, padding:"3px 12px", borderRadius:99, display:"inline-block", marginBottom:10 }}>{c.age}</div>
+              <h3 style={{ fontFamily:"'Fredoka One',cursive", fontSize:21, color:T.navy, marginBottom:8 }}>{c.title}</h3>
+              <p style={{ color:"#666", fontSize:14, lineHeight:1.6, marginBottom:14 }}>{c.desc}</p>
+              <div style={{ display:"inline-flex", alignItems:"center", gap:6, background:`${c.color}15`, color:c.color, fontWeight:800, fontSize:12, padding:"6px 14px", borderRadius:99, border:`1.5px solid ${c.color}33` }}>
+                View Modules ✦
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Course Modal */}
+      {active && (
+        <Modal onClose={() => setActiveModal(null)}>
+          <div style={{ textAlign:"center", marginBottom:24 }}>
+            <div style={{ fontSize:52, marginBottom:8 }}>{active.icon}</div>
+            <div style={{ background:`${active.color}15`, color:active.color, fontSize:12, fontWeight:800, padding:"4px 14px", borderRadius:99, display:"inline-block", marginBottom:10 }}>{active.age}</div>
+            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:26, color:T.navy, marginBottom:6 }}>{active.title}</h2>
+            <p style={{ color:"#6B7280", fontSize:14, lineHeight:1.6 }}>{active.desc}</p>
+          </div>
+          <div style={{ background:`${active.color}08`, borderRadius:18, padding:20, border:`2px solid ${active.color}20` }}>
+            <div style={{ fontFamily:"'Fredoka One',cursive", fontSize:16, color:T.navy, marginBottom:14 }}>📚 What's Included</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {active.modules.map((m, i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:10, background:T.white, borderRadius:12, padding:"10px 14px", boxShadow:"0 1px 6px rgba(0,0,0,0.04)" }}>
+                  <div style={{ width:24, height:24, borderRadius:"50%", background:`linear-gradient(135deg,${active.color},${active.color}88)`, display:"flex", alignItems:"center", justifyContent:"center", color:"white", fontSize:11, fontWeight:800, flexShrink:0 }}>{i+1}</div>
+                  <span style={{ fontWeight:700, fontSize:14, color:T.navy }}>{m}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ marginTop:22, textAlign:"center" }}>
+            <Btn color={active.color} onClick={() => { setActiveModal(null); document.getElementById("contact").scrollIntoView({behavior:"smooth"}); }}>Book a Free Trial 🚀</Btn>
+          </div>
+        </Modal>
+      )}
+    </section>
+  );
+}
+
+/* ════════════ ABOUT SECTION ════════════ */
+function AboutSection() {
+  const [showCreds, setShowCreds] = useState(false);
+
+  const DEGREES = [
+    { icon:"🎓", title:"PG Program in AI & ML", sub:"McCombs School of Business, University of Texas at Austin, USA" },
+    { icon:"🎓", title:"M.Tech — Electronics", sub:"Engineering & Technology" },
+    { icon:"🎓", title:"B.E. — E&TC", sub:"Electronics & Telecommunication Engineering" },
+    { icon:"📚", title:"B.Ed.", sub:"Bachelor of Education" },
+  ];
+
+  const CERTS = [
+    { icon:"🏛️", title:"Innovation Ambassador", sub:"Innovation Cell, Ministry of Education, India" },
+    { icon:"📋", title:"LEAD with Project Management", sub:"Certified" },
+    { icon:"🏫", title:"Competency Based Educator", sub:"CBSE, India" },
+    { icon:"🚀", title:"School Innovation Ambassador", sub:"Ministry of Education, India" },
+    { icon:"🌏", title:"Transformative Teaching for Inclusive Development", sub:"LearnX, Singapore" },
+    { icon:"🛸", title:"National Space Innovation Challenge", sub:"NSIC" },
+    { icon:"🔧", title:"ATL Unbox Tinkering Training", sub:"Atal Tinkering Labs" },
+  ];
+
+  return (
+    <section id="about" style={{ background:T.purple, padding:"100px 40px" }}>
+      <div style={{ maxWidth:1000, margin:"0 auto", display:"flex", gap:56, alignItems:"center", flexWrap:"wrap" }}>
+
+        {/* Photo + badges */}
+        <div style={{ flex:"0 0 300px", position:"relative" }}>
+          <div style={{ width:270, height:270, borderRadius:"40% 60% 60% 40% / 50% 40% 60% 50%", background:`linear-gradient(135deg,${T.teal},${T.navy})`, display:"flex", alignItems:"center", justifyContent:"center", boxShadow:`0 20px 60px ${T.teal}44`, animation:"float 5s ease-in-out infinite" }}>
+            <div style={{ width:270, height:270, borderRadius:"40% 60% 60% 40% / 50% 40% 60% 50%", overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <img src={profilePic} alt="Divya Maheshwari" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            </div>
+          </div>
+          {/* Static badges */}
+          {[{top:-18,right:-8,emoji:"🏆",label:"Top Tutor",color:T.yellow},{bottom:-8,right:28,emoji:"⭐",label:"4.9 Stars",color:T.pink}].map((b,i)=>(
+            <div key={i} style={{ position:"absolute",top:b.top,bottom:b.bottom,right:b.right, background:T.white, borderRadius:14, padding:"9px 13px", display:"flex", alignItems:"center", gap:7, boxShadow:"0 4px 18px rgba(0,0,0,0.12)", border:`3px solid ${b.color}`, fontWeight:800, fontSize:13, color:T.navy, animation:`float 4s ease-in-out ${i}s infinite`, zIndex:2, whiteSpace:"nowrap" }}>
+              <span style={{ fontSize:18 }}>{b.emoji}</span>{b.label}
+            </div>
+          ))}
+          {/* Clickable Certified badge */}
+          <div onClick={() => setShowCreds(true)} style={{ position:"absolute", top:"48%", left:-90, background:T.white, borderRadius:14, padding:"9px 13px", display:"flex", alignItems:"center", gap:7, boxShadow:"0 4px 18px rgba(0,0,0,0.12)", border:`3px solid ${T.green}`, fontWeight:800, fontSize:13, color:T.navy, animation:"float 4s ease-in-out 2s infinite", zIndex:2, whiteSpace:"nowrap", cursor:"pointer", transition:"transform .2s" }}
+            onMouseEnter={e=>e.currentTarget.style.transform="scale(1.08)"}
+            onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+          >
+            <span style={{ fontSize:18 }}>🎓</span>Certified
+            <span style={{ fontSize:10, background:T.green, color:"white", borderRadius:99, padding:"2px 7px", fontWeight:800 }}>VIEW</span>
+          </div>
+        </div>
+
+        {/* Text */}
+        <div style={{ flex:1, minWidth:280 }}>
+          <div style={{ display:"inline-block", background:`${T.teal}18`, color:T.teal, fontFamily:"'Fredoka One',cursive", padding:"6px 20px", borderRadius:99, fontSize:14, marginBottom:14 }}>Meet Your Mentor</div>
+          <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(26px,4vw,42px)", color:T.navy, marginBottom:6 }}>
+            Hi! I'm <span style={{ color:T.orange }}>Divya Maheshwari</span> 👋
+          </h2>
+          <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:16 }}>
+            {["🎓 Double Master's","📍 UT Austin, USA","👩‍🏫 13+ Years Teaching","👧 50+ Students"].map(tag => (
+              <span key={tag} style={{ background:"rgba(255,255,255,0.15)", color:T.white, fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:99 }}>{tag}</span>
+            ))}
+          </div>
+          <p style={{ color:T.white, fontSize:15, lineHeight:1.8, marginBottom:14 }}>
+            Engineer, educator, and the person who will make your child say <em>"Coding is actually SO cool."</em> With a Post-Graduate program in AI & ML from the <strong style={{color:T.yellow}}>University of Texas at Austin</strong> and 13+ years of teaching experience, I've had the privilege of watching curious kids transform into confident creators. 🧠
+          </p>
+          <p style={{ color:T.white, fontSize:15, lineHeight:1.8, marginBottom:14 }}>
+            I started DibsOnAI with one belief: <strong style={{color:T.yellow}}>every child deserves to learn like a builder, not a listener.</strong> Schools are great — but they rarely hand kids a problem and say <em>"now go invent the solution."</em> That's exactly what we do here.
+          </p>
+          <p style={{ color:T.white, fontSize:15, lineHeight:1.8, marginBottom:22 }}>
+            We are living through the most significant technological shift in human history. <strong style={{color:T.yellow}}>AI isn't coming — it's already here.</strong> The children of today won't just use these tools — <strong style={{color:T.yellow}}>they will build them.</strong> Every DibsOnAI session ends with something real your child actually made. 🏆
+          </p>
+          <div style={{ display:"flex", gap:12, flexWrap:"wrap", marginBottom:18 }}>
+            {[["🧒","Kid-First"],["🎮","Learn by Building"],["💬","Live 1-on-1"]].map(([icon,label])=>(
+              <div key={label} style={{ display:"flex", alignItems:"center", gap:8, background:T.bg, padding:"10px 18px", borderRadius:99, fontWeight:700, fontSize:14, color:T.navy }}>{icon} {label}</div>
+            ))}
+          </div>
+          <div onClick={() => setShowCreds(true)} style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.12)", border:"2px solid rgba(255,255,255,0.25)", color:T.white, padding:"10px 20px", borderRadius:99, fontWeight:700, fontSize:13, cursor:"pointer", transition:"all .2s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.22)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.12)"; }}
+          >
+            🎓 View Full Credentials & Certifications
+          </div>
+        </div>
+      </div>
+
+      {/* Credentials Modal */}
+      {showCreds && (
+        <Modal onClose={() => setShowCreds(false)}>
+          <div style={{ textAlign:"center", marginBottom:24 }}>
+            <div style={{ fontSize:48, marginBottom:8 }}>🎓</div>
+            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:26, color:T.navy, marginBottom:4 }}>Divya Maheshwari</h2>
+            <p style={{ color:"#6B7280", fontSize:13 }}>Founder, DibsOnAI · Engineer · Educator</p>
+          </div>
+
+          <div style={{ marginBottom:20 }}>
+            <div style={{ fontFamily:"'Fredoka One',cursive", fontSize:16, color:T.navy, marginBottom:12, display:"flex", alignItems:"center", gap:8 }}>🎓 Academic Degrees</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {DEGREES.map((d,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:12, background:`${T.teal}08`, borderRadius:14, padding:"12px 16px", border:`1.5px solid ${T.teal}20` }}>
+                  <span style={{ fontSize:20 }}>{d.icon}</span>
+                  <div>
+                    <div style={{ fontWeight:800, fontSize:14, color:T.navy }}>{d.title}</div>
+                    <div style={{ fontSize:12, color:"#6B7280", marginTop:2 }}>{d.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div style={{ fontFamily:"'Fredoka One',cursive", fontSize:16, color:T.navy, marginBottom:12, display:"flex", alignItems:"center", gap:8 }}>🏅 Certifications</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {CERTS.map((c,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:12, background:`${T.orange}08`, borderRadius:14, padding:"12px 16px", border:`1.5px solid ${T.orange}20` }}>
+                  <span style={{ fontSize:20 }}>{c.icon}</span>
+                  <div>
+                    <div style={{ fontWeight:800, fontSize:14, color:T.navy }}>{c.title}</div>
+                    <div style={{ fontSize:12, color:"#6B7280", marginTop:2 }}>{c.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ textAlign:"center", fontSize:12, color:"#9CA3AF", marginTop:20 }}>
+            ✅ Verified credentials available on request
+          </p>
+        </Modal>
+      )}
+    </section>
+  );
+}
+
 /* ════════════ HOMEPAGE ════════════ */
 function Homepage({ setScreen }) {
   return (
     <div style={{ background:T.bg }}>
       {/* HERO */}
-      <section id="home" style={{ minHeight:"100vh", background:T.navy, display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", paddingTop:80 }}>
+      <section id="home" style={{ minHeight:"100vh", background:T.navy, display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"visible", paddingTop:80, paddingBottom:0 }}>
         {[["-10%","5%",300,T.teal,"0s"],["55%","82%",380,T.pink,"2s"],["75%","15%",260,T.yellow,"1s"]].map(([top,left,size,col,delay],i)=>(
           <div key={i} style={{ position:"absolute",top,left,width:size,height:size,borderRadius:"50%",background:col,opacity:.13,filter:"blur(50px)",animation:`float 7s ease-in-out ${delay} infinite`,pointerEvents:"none" }}/>
         ))}
@@ -262,86 +493,50 @@ function Homepage({ setScreen }) {
             ))}
           </div>
         </div>
-        <div style={{ position:"absolute", bottom:-2, left:0, right:0 }}>
-          <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg"><path fill={T.bg} d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"/></svg>
-        </div>
+
       </section>
 
-      {/* SERVICES */}
-      <section id="courses" style={{ background:"#FF1493", padding:"100px 40px" }}>
-        <div style={{ maxWidth:1100, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:56 }}>
-            <div style={{ display:"inline-block", background:T.yellow, color:T.navy, fontFamily:"'Fredoka One',cursive", padding:"6px 20px", borderRadius:99, fontSize:14, marginBottom:14 }}>What We Teach</div>
-            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(30px,5vw,50px)", color:T.navy }}>Courses Kids <span style={{ color:T.teal }}>Love</span> 🎉</h2>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))", gap:22 }}>
-            {[
-              {icon:"🧱",title:"Logic Legends",desc:"Build games, animations & stories.. Focuses on the brain of coding",color:T.teal,age:"Age 6+"},
-	      {icon:"🐍",title:"Code Commanders",desc:"Master the language of the future! Build your own gravity-defying games and interactive stories, with Python.",color:T.yellow,age:"Age 8+"},
-              {icon:"🤖",title:"AI Adventures",desc:"Train your own AI model, talk to chatbots, and explore machine learning!",color:T.orange,age:"Age 8+"},
-              {icon:"🌐",title:"Web Magic",desc:"Create your own website with HTML, CSS and JavaScript from scratch.",color:T.green,age:"Age 10+"},
-              {icon:"🧠",title:"Prompt Engineering",desc:"Learn to talk to AI like a pro — craft prompts, build AI tools, go viral!",color:T.purple,age:"Age 12+"},
-		{icon:"🎮",title:"Gamifiers",desc:"Indulge yourself into world of Roblox. & much more",color:T.yellow,age:"Age 12+"},
-            ].map((c,i)=>(
-              <div key={i} style={{ background:T.white, borderRadius:24, padding:26, boxShadow:"0 4px 22px rgba(0,0,0,0.06)", borderBottom:`5px solid ${c.color}`, transition:"transform .2s, box-shadow .2s", cursor:"default" }}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-8px)"; e.currentTarget.style.boxShadow=`0 12px 32px ${c.color}33`; }}
-                onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 4px 22px rgba(0,0,0,0.06)"; }}
-              >
-                <div style={{ fontSize:46, marginBottom:12, display:"inline-block", animation:`float 4s ease-in-out ${i*.5}s infinite` }}>{c.icon}</div>
-                <div style={{ background:`${c.color}18`, color:c.color, fontSize:11, fontWeight:800, padding:"3px 12px", borderRadius:99, display:"inline-block", marginBottom:10 }}>{c.age}</div>
-                <h3 style={{ fontFamily:"'Fredoka One',cursive", fontSize:21, color:T.navy, marginBottom:8 }}>{c.title}</h3>
-                <p style={{ color:"#666", fontSize:14, lineHeight:1.6 }}>{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* WAVE: Hero → Courses */}
+      <svg viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg" style={{ display:"block", marginTop:-2 }}>
+        <path fill="#1A1A5E" d="M0,0 L1440,0 L1440,35 C1200,65 960,10 720,40 C480,65 240,15 0,40 Z"/>
+        <path fill="#FF1493" d="M0,40 C240,15 480,65 720,40 C960,10 1200,65 1440,35 L1440,70 L0,70 Z"/>
+      </svg>
+
+      {/* COURSES MODAL */}
+      <CoursesSection setScreen={setScreen} />
+
+      {/* WAVE: Courses → About */}
+      <svg viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg" style={{ display:"block", marginTop:-2 }}>
+        <path fill="#FF1493" d="M0,0 L1440,0 L1440,35 C1200,65 960,10 720,40 C480,65 240,15 0,40 Z"/>
+        <path fill="#7B5EA7" d="M0,40 C240,15 480,65 720,40 C960,10 1200,65 1440,35 L1440,70 L0,70 Z"/>
+      </svg>
 
       {/* ABOUT */}
-      <section id="about" style={{ background:T.purple, padding:"100px 40px" }}>
-        <div style={{ maxWidth:1000, margin:"0 auto", display:"flex", gap:56, alignItems:"center", flexWrap:"wrap" }}>
-          <div style={{ flex:"0 0 300px", position:"relative" }}>
-            <div style={{ width:270, height:270, borderRadius:"40% 60% 60% 40% / 50% 40% 60% 50%", background:`linear-gradient(135deg,${T.teal},${T.navy})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:96, boxShadow:`0 20px 60px ${T.teal}44`, animation:"float 5s ease-in-out infinite" }}><div style={{ width:270, height:270, borderRadius:"40% 60% 60% 40% / 50% 40% 60% 50%", background:`linear-gradient(135deg,${T.teal},${T.navy})`, display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", boxShadow:`0 20px 60px ${T.teal}44`, animation:"float 5s ease-in-out infinite" }}>
-  <img 
-    src={profilePic} 
-    alt="Tutor" 
-    style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-  />
-</div></div>
-            {[{top:-18,right:-8,emoji:"🏆",label:"Top Tutor",color:T.yellow},{bottom:-8,right:28,emoji:"⭐",label:"4.9 Stars",color:T.pink},{top:"48%",left:-28,emoji:"🎓",label:"Certified",color:T.green}].map((b,i)=>(
-              <div key={i} style={{ position:"absolute",top:b.top,bottom:b.bottom,left:b.left,right:b.right, background:T.white, borderRadius:14, padding:"9px 13px", display:"flex", alignItems:"center", gap:7, boxShadow:"0 4px 18px rgba(0,0,0,0.12)", border:`3px solid ${b.color}`, fontWeight:800, fontSize:13, color:T.navy, animation:`float 4s ease-in-out ${i}s infinite`, zIndex:2, whiteSpace:"nowrap" }}>
-                <span style={{ fontSize:18 }}>{b.emoji}</span>{b.label}
-              </div>
-            ))}
-          </div>
-          <div style={{ flex:1, minWidth:280 }}>
-            <div style={{ display:"inline-block", background:`${T.teal}18`, color:T.teal, fontFamily:"'Fredoka One',cursive", padding:"6px 20px", borderRadius:99, fontSize:14, marginBottom:14 }}>Meet Your Tutor</div>
-            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(26px,4vw,42px)", color:T.navy, marginBottom:14 }}>
-              Hi! I'm the founder of <span style={{ color:T.orange }}>DibsOnAI</span> 👋
-            </h2>
-            <p style={{ color:T.white, fontSize:16, lineHeight:1.8, marginBottom:14 }}>I'm passionate about making AI & coding accessible, exciting, and genuinely fun for kids. Every session is designed to spark curiosity and build real skills — not just copy-paste exercises.</p>
-            <p style={{ color:T.white, fontSize:16, lineHeight:1.8, marginBottom:26 }}>With 1-on-1 live sessions tailored to each child's pace and interests, kids leave every class feeling like <strong>actual AI inventors</strong>. 🚀</p>
-            <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
-              {[["🧒","Kid-First"],["🎮","Learn by Building"],["💬","Live 1-on-1"]].map(([icon,label])=>(
-                <div key={label} style={{ display:"flex", alignItems:"center", gap:8, background:T.bg, padding:"10px 18px", borderRadius:99, fontWeight:700, fontSize:14, color:T.navy }}>{icon} {label}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <AboutSection />
+
+      {/* WAVE: About → Contact */}
+      <svg viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg" style={{ display:"block", marginTop:-2 }}>
+        <path fill="#7B5EA7" d="M0,0 L1440,0 L1440,25 Q720,55 0,25 Z"/>
+        <path fill="#FFD93D" d="M0,25 Q720,55 1440,25 L1440,50 L0,50 Z"/>
+      </svg>
 
       {/* CONTACT */}
       <section id="contact" style={{ background:T.yellow, padding:"100px 40px" }}>
         <div style={{ maxWidth:660, margin:"0 auto" }}>
           <div style={{ textAlign:"center", marginBottom:44 }}>
             <div style={{ display:"inline-block", background:`${T.pink}18`, color:T.pink, fontFamily:"'Fredoka One',cursive", padding:"6px 20px", borderRadius:99, fontSize:14, marginBottom:14 }}>Let's Connect!</div>
-            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(26px,4vw,46px)", color:T.navy }}>Book a <span style={{ color:T.orange }}>Free Trial</span> 🎯</h2>
+            <h2 style={{ fontFamily:"'Fredoka One',cursive", fontSize:"clamp(26px,4vw,46px)", color:"#1C1C1C" }}>Book a <span style={{ color:T.orange }}>Free Trial</span> 🎯</h2>
             <p style={{ color:"#777", fontSize:15 }}>No commitment — just 30 mins of pure AI fun for your kid!</p>
           </div>
           <ContactForm />
         </div>
       </section>
 
+      {/* WAVE: Contact → Footer */}
+      <svg viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg" style={{ display:"block", marginTop:-2 }}>
+        <path fill="#FFD93D" d="M0,0 L1440,0 L1440,25 Q720,55 0,25 Z"/>
+        <path fill="#1A1A5E" d="M0,25 Q720,55 1440,25 L1440,50 L0,50 Z"/>
+      </svg>
 
 
       {/* FOOTER */}
@@ -357,6 +552,20 @@ function Homepage({ setScreen }) {
     </span>
   </div>
   <p style={{ fontSize: 14, maxWidth: 240, lineHeight: 1.6 , color: "#FF1493",fontWeight: 800,}}>CODE CREATE CONQUER</p>
+  {/* Social Icons */}
+  <div style={{ display:"flex", gap:10, marginTop:16 }}>
+    {[
+      { href:"https://www.instagram.com/dibsonai/", label:"Instagram", bg:"#E1306C", svg:<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> },
+      { href:"https://www.linkedin.com/company/dibsonai/", label:"LinkedIn", bg:"#0A66C2", svg:<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
+      { href:"https://wa.me/917217890305", label:"WhatsApp", bg:"#25D366", svg:<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> },
+    ].map(({ href, label, bg, svg }) => (
+      <a key={label} href={href} target="_blank" rel="noreferrer" title={label}
+        style={{ width:38, height:38, borderRadius:"50%", background:bg, display:"flex", alignItems:"center", justifyContent:"center", transition:"transform .2s, opacity .2s", opacity:0.9 }}
+        onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.opacity="1"; }}
+        onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.opacity="0.9"; }}
+      >{svg}</a>
+    ))}
+  </div>
 </div>
           <div>
             <div style={{ fontWeight:800, color:T.white, marginBottom:10 }}>Quick Links</div>
@@ -367,9 +576,11 @@ function Homepage({ setScreen }) {
           </div>
           <div>
             <div style={{ fontWeight:800, color:T.white, marginBottom:10 }}>Contact</div>
-            <div style={{ fontSize:14, marginBottom:7 }}>📧 dibsonai.@gmail.com</div>
-            <div style={{ fontSize:14, marginBottom:7 }}>💬 Call or WhatsApp on +917217890305</div>
-            <div style={{ fontSize:14 }}>🌍 Online · Worldwide</div>
+            <a href="mailto:dibsonai@gmail.com" style={{ display:"block", fontSize:14, marginBottom:7, color:"rgba(255,255,255,.75)", textDecoration:"none" }}
+              onMouseEnter={e=>e.target.style.color=T.yellow} onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.75)"}>📧 infodibsonai@gmail.com</a>
+            <a href="https://wa.me/917217890305" target="_blank" rel="noreferrer" style={{ display:"block", fontSize:14, marginBottom:7, color:"rgba(255,255,255,.75)", textDecoration:"none" }}
+              onMouseEnter={e=>e.target.style.color=T.yellow} onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.75)"}>💬 WhatsApp +917217890305</a>
+            <div style={{ fontSize:14, color:"rgba(255,255,255,.75)" }}>🌍 Online · Worldwide</div>
           </div>
         </div>
         <div style={{ borderTop:"1px solid rgba(255,255,255,.1)", paddingTop:18, textAlign:"center", fontSize:13 }}>
@@ -379,6 +590,8 @@ function Homepage({ setScreen }) {
     </div>
   );
 }
+
+
 function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", child: "", age: "", course: "", msg: "" });
   const [sent, setSent] = useState(false);
@@ -912,6 +1125,8 @@ function TutorStudentDetail({ s, onBack }) {
         ))}
       </div>
       <div className="student-detail-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:18 }}>
+        <div style={{ background:T.white, borderRadius:20, padding:22, boxShadow:"0 2px 14px rgba(0,0,0,0.05)" }}>
+          <h3 style={{ fontFamily:"'Fredoka One',cursive",fontSize:17,color:T.navy,marginBottom:14 }}>🗺️ Learning Path</h3>
           {s.milestones.map((m,i)=>{
             const isDone=i<done, isCur=i===done;
             return (
